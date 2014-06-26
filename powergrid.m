@@ -4,6 +4,8 @@ f_init = input('initialize?[y,n]','s');   %'y'‚Ì,‰Šú‰»ˆ—‚ğs‚¤
 if isempty(f_init)
     f_init = 'n';
 end
+
+
 if f_init=='y' || exist('define.mat','file')~=2   %'define.mat'‚ª‚È‚¯‚ê‚Î‹­§“I‚É‰Šú‰»ˆ—
     clear all;
     disp('‰Šú‰»’†');
@@ -248,6 +250,9 @@ if isempty(f_run)
 end
 if f_run == 'y'
     %% x,ƒÉ‚Ì„ˆÚ‚ğ‹L‰¯
+    % 
+    % $$e^{\pi i} + 1 = 0$$
+    % 
     X = ones(num_x,stp_max);
     X_min = ones(num_x,stp_max*60);
     LAMBDA = cell(num_x,stp_max);
