@@ -293,7 +293,7 @@ end
 | N 			|n*n	|隣接行列
 | Lp 			|n*n	|グラフラプラシアン
 | L_diag 		|n		|グラフラプラシアンの対角成分
-| lambda_matrix |m*m	|なんだろうね
+| lambda_matrix |n*m	|なんだろうね
 | agt_type 		|n		|エージェント種別
 | agt_sub_type 	|n		|エージェント分類
 | G_sym 		|sym[m]	|Gのシンボリック式(Gごと)
