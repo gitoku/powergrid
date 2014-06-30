@@ -28,6 +28,8 @@
     - 保存した変数・関数
 - 2. パラメーター設定
 - 3. シミュレーション実行
+    - シミュレーションのスキップ
+    - 初期設定
 - 4. 結果の表示
 - 5. 結果のエクスポート
 
@@ -54,6 +56,10 @@ end
 if f_init=='y' || exist('define.mat','file')~=2   %'define.mat'がなければ強制的に初期化処理
     clear all;
     disp('初期化中');
+
+    % 「ここに以下の「初期化処理」がはいる]
+
+end
 ```
 
 ### グラフの定義
@@ -282,27 +288,22 @@ Gの定義が更新される際に実行
         );
     clear all;
     disp('初期化完了');
-end
 ```
 
 ### 保存した変数・関数
 |変数・関数名 |種別(要素数)|説明|
 |------|--------|----|
-| num_x			|n	|xの要素数
-| num_lambda 	|m	|λの要素数
+| num_x			|1	|xの要素数(n)
+| num_lambda 	|1	|λの要素数(m)
 | N 			|n*n	|隣接行列
 | Lp 			|n*n	|グラフラプラシアン
 | L_diag 		|n		|グラフラプラシアンの対角成分
-| lambda_matrix |n*m	|なんだろうね
+| lambda_matrix |n*m	|xとλの対応行列
 | agt_type 		|n		|エージェント種別
 | agt_sub_type 	|n		|エージェント分類
-| G_sym 		|sym[m]	|Gのシンボリック式(Gごと)
-| Gmatrix_sym 	|sym[n*m]|Gのシンボリック式
-| Gm 			|f[m,n]:1→1	|Gの無名関数
-| G 			|f[m]:n→1	|Gの無名関数
-| dlGdxi 		|f	|
-| dlGdx_sym 	|f[]	|
-| lG_sym 		|	|
+| Gm 			|f[n]:1→1	|Gの無名関数:入力(x_n)
+| G 			|f:n→1	|Gの無名関数:入力(x)
+| dlGdxi 		|f[n]:(1+m)→1	|d(λG)/dx の無名関数:入力(x_n,λ)
 
 
 
@@ -329,7 +330,7 @@ eps_t = .001;    %θ[k]の更新の打ち切り基準:[{max(θ[k])-min(θ[k])}/m
 dx_max = 1000;    %x[k]の更新の計算中止dx
 kt_max = 1000;     %θ[k]の更新の計算打ち切りk
 
-%θの合意の経過データ用###
+%θの合意の経過データ用
 wtc_m = 2;      %監視するθiのi
 wtc_step = 2;   %監視するθiのs
 g = rand([num_x,1])|5;
@@ -338,16 +339,22 @@ g = rand([num_x,1])|5;
 3. シミュレーション実行
 --
 
+### シミュレーションのスキップ
 ```matlab
-f_run = input('run?[y,n]','s');  %'y'で実行
+f_run = input('run?[y,n]','s');  %
+'y'で実行
 if isempty(f_run)
     f_run = 'n';
 end
 if f_run == 'y'
+
+    % [ここに以下の「シミュレーション実行」がはいる]
+
+end
+```
+### 初期設定
+```matlab
     %% x,λの推移を記憶
-    %
-    % $$e^{\pi i} + 1 = 0$$
-    %
     X = ones(num_x,stp_max);
     X_min = ones(num_x,stp_max|60);
     LAMBDA = cell(num_x,stp_max);
@@ -373,10 +380,9 @@ if f_run == 'y'
         end
         LAMBDA_s(j,1) = {SUM/sum(lambda_matrix(:,j))};
     end
+```
 
-
-
-
+```matlab
     %% ステップ実行(step >= 2)
     disp('実行中...')
     for step = 2:stp_max
