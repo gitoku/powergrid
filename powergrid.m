@@ -295,7 +295,7 @@ if f_run == 'y'
         for i=1:num_x   %各ノードについて
             % x[k]がε以下となるまで更新<(17)_b>
             kx=0;
-            while true
+            while kx < 60
                 if step==2
                     l = LAMBDA{i,step-1};
                 elseif kx<=c_delay
@@ -335,12 +335,6 @@ if f_run == 'y'
                 kx=kx+1;
                 
                 X_min(i,(step-1)*60+kx) = x(i);
-                
-                
-                
-                if kx==60
-                    break;
-                end
             end
         end
         %xの更新<(17)_c>

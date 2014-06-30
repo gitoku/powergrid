@@ -31,11 +31,18 @@
     - シミュレーションのスキップ
     - 初期設定
     - 実行
+    - xの更新
+        - [x](#0)
+        - [x](#k)
         - xの更新
-            - [x](#0)
-            - [x](#k)
-            - xの更新<(17)_c>
-        - λの更新
+        - <3-a> λ の選択
+        - <3-b> df/dx の計算(汚コード閲覧注意)
+    - λの更新
+        - λ検算用(スーパバイザ方式)
+        - [θ](#0)
+        - [θi](#0)
+        - [θi](#k)
+        - λの推定値の更新
     - 結果の保存
 - 4. 結果の表示
 - 5. 結果のエクスポート
@@ -405,17 +412,46 @@ step=2 より開始
 
 
 
-#### xの更新
-##### x[0]の準備<(17)_a>
+### xの更新
+#### x[0]の準備
 ```matlab
         x = X(:,step-1);
 ```
 
-##### x[k]がε以下となるまで更新<(17)_b>
+#### x[k]がε以下となるまで更新
 ```matlab
         for i=1:num_x   %各ノードについて
             kx=0;
-            while true
+            while kx < 60
+
+                %
+                % <3-a> λの選択
+                %   (l)
+
+                %
+                % <3-b> df/dx の計算
+                %  (df)
+
+                dg = dlGdxi{i}( x(i), l );
+                x(i) = x(i) - A* ( gamma*df + dg );
+
+
+                kx=kx+1;
+
+                X_min(i,(step-1)*60+kx) = x(i);
+
+            end
+        end
+```
+
+#### xの更新
+
+```matlab
+        X(:,step) = x;
+```
+
+#### <3-a> λ の選択
+```matlab
                 if step==2
                     l = LAMBDA{i,step-1};
                 elseif kx<=c_delay
@@ -423,10 +459,10 @@ step=2 より開始
                 else
                     l = LAMBDA{i,step-1};
                 end
+```
 
-
-
-
+#### <3-b> df/dx の計算(汚コード閲覧注意)
+```matlab
                 now = (step-1)*60+kx;
 
                 f = 1;
@@ -449,43 +485,25 @@ step=2 より開始
 
                 factor = [g(i) f 0  f 0 g(i)*2  5 0 2];
                 df = dFdx( agt_type(i),  x(i), factor(:) );
-                dg = dlGdxi{i}( x(i), l );
-                x(i) = x(i) - A* ( gamma*df + dg );
-
-
-                kx=kx+1;
-
-                X_min(i,(step-1)*60+kx) = x(i);
-
-
-
-                if kx==60
-                    break;
-                end
-            end
-        end
-```
-
-##### xの更新<(17)_c>
-
-```matlab
-        X(:,step) = x;
 ```
 
 
 
-
-#### λの更新
+### λの更新
+#### λ検算用(スーパバイザ方式)
 ```matlab
-        % λ検算用(スーパバイザ方式)
         for m = 1:num_lambda
             LAMBDA_s(m,step) = {max(0, LAMBDA_s{m,step-1}+B_p*G{m}( X(:,step)))};
         end
+```
 
+#### θ[0]の初期化
+```matlab
         theta = zeros([num_x num_lambda]);
         next_theta = zeros([num_x num_lambda]);
-
-        % θi[0]の準備<(28)_a>
+```
+#### θi[0]の準備
+```matlab
         for n=1:num_x
             for m=1:num_lambda
                 if lambda_matrix(n,m)
@@ -495,10 +513,10 @@ step=2 より開始
                 end
             end
         end
+```
 
-
-
-        % θi[k]の相対差がε以下となるまで更新<(28)_b>
+#### θi[k]を相対差がε以下となるまで更新
+```matlab
         for m=1:num_lambda
             kt=1;
             while true
@@ -531,8 +549,9 @@ step=2 より開始
                 kt=kt+1;
             end
         end
-
-        %λの推定値の更新<(28)_c>
+```
+#### λの推定値の更新
+```matlab
         for n = 1:num_x
             LAMBDA(n,step) = {theta(n,:).'};
         end
