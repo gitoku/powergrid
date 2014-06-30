@@ -329,16 +329,16 @@ clear all
 load('define');
 
 %% パラメータ設定###
-A =2;
-B = .1;
-gamma = .01;
-c = .1./L_diag;
+A =2;   % 資料中α
+B = .1; % 資料中β
+gamma = .01;    %「L=γF+λG」のγ
+c = .1./L_diag; %資料中ε
 
 B_p = B/sum(1./c);  %スーパバイザ用のB
 
-day = 24;
-c_delay = 5;
-stp_max = day*3+1;    %s(実行step数)の最大
+day = 24;   %一日=24時間
+c_delay = 5;    %λの合意にかかる遅れ
+stp_max = day*3+1;    %s(実行step数)の最大(単位：時間)
 eps_x = .001;   %x[k]の更新の打ち切り基準:dx[k]<eps_x
 eps_t = .001;    %θ[k]の更新の打ち切り基準:[{max(θ[k])-min(θ[k])}/mean(θ[k])]<eps_t
 dx_max = 1000;    %x[k]の更新の計算中止dx
