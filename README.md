@@ -432,7 +432,7 @@ step=2 より開始
                 % <3-b> df/dx の計算
                 %  (df)
 
-                dg = dlGdxi{i}( x(i), l );
+                dg = dlGdxi{i}(l);
                 x(i) = x(i) - A* ( gamma*df + dg );
 
 
