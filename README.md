@@ -32,6 +32,9 @@
     - 初期設定
     - 実行
         - xの更新
+            - [x](#0)
+            - [x](#k)
+            - xの更新<(17)_c>
         - λの更新
     - 結果の保存
 - 4. 結果の表示
@@ -239,9 +242,9 @@ Gの定義が更新される際に実行
     dlGdx_sym = sym('dlGdx_sym',[num_x 1]);
     for n=1:numel(x)
        dlGdx_sym(n) = diff(lG_sym,x(n));
-       dlGdxi{n} = matlabFunction(dlGdx_sym(n),'vars',{x(n) lambda});
+       dlGdxi{n} = matlabFunction(dlGdx_sym(n),'vars',{lambda});
     end
-    dlGdx = matlabFunction(dlGdx_sym,'vars',{x lambda});
+    dlGdx = matlabFunction(dlGdx_sym,'vars',{lambda});
 ```
 
 
@@ -403,11 +406,14 @@ step=2 より開始
 
 
 #### xの更新
+##### x[0]の準備<(17)_a>
 ```matlab
-        %x[0]の準備<(17)_a>
         x = X(:,step-1);
+```
+
+##### x[k]がε以下となるまで更新<(17)_b>
+```matlab
         for i=1:num_x   %各ノードについて
-            % x[k]がε以下となるまで更新<(17)_b>
             kx=0;
             while true
                 if step==2
@@ -419,10 +425,11 @@ step=2 より開始
                 end
 
 
-                f = 1;
+
 
                 now = (step-1)*60+kx;
 
+                f = 1;
                 if agt_type(i)==2
                     if agt_sub_type(i)==1
                         f = home1(now,day*60,2,1,3);
@@ -457,7 +464,11 @@ step=2 より開始
                 end
             end
         end
-        %xの更新<(17)_c>
+```
+
+##### xの更新<(17)_c>
+
+```matlab
         X(:,step) = x;
 ```
 
