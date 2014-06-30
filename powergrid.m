@@ -159,9 +159,9 @@ if f_init=='y' || exist('define.mat','file')~=2   %'define.mat'Ç™Ç»ÇØÇÍÇŒã≠êßìIÇ
     dlGdx_sym = sym('dlGdx_sym',[num_x 1]);
     for n=1:numel(x)
        dlGdx_sym(n) = diff(lG_sym,x(n));
-       dlGdxi{n} = matlabFunction(dlGdx_sym(n),'vars',{x(n) lambda});
+       dlGdxi{n} = matlabFunction(dlGdx_sym(n),'vars',lambda);
     end
-    dlGdx = matlabFunction(dlGdx_sym,'vars',{x lambda});
+    dlGdx = matlabFunction(dlGdx_sym,'vars',lambda);
 
 
     
@@ -328,7 +328,7 @@ if f_run == 'y'
 
                 factor = [g(i) f 0  f 0 g(i)*2  5 0 2];
                 df = dFdx( agt_type(i),  x(i), factor(:) );
-                dg = dlGdxi{i}( x(i), l );
+                dg = dlGdxi{i}(l);
                 x(i) = x(i) - A* ( gamma*df + dg );
                 
 
