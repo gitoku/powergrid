@@ -30,6 +30,10 @@
 - 3. シミュレーション実行
     - シミュレーションのスキップ
     - 初期設定
+    - 実行
+        - xの更新
+        - λの更新
+    - 結果の保存
 - 4. 結果の表示
 - 5. 結果のエクスポート
 
@@ -381,16 +385,25 @@ end
         LAMBDA_s(j,1) = {SUM/sum(lambda_matrix(:,j))};
     end
 ```
-
+### 実行
+step=2 より開始
 ```matlab
-    %% ステップ実行(step >= 2)
     disp('実行中...')
     for step = 2:stp_max
 
+        % xの更新  ->下記参照
+        % λの更新  ->下記参照
+
+        % 経過の表示
+        % s,k(xについて),k(thetaについて)
+        disp([step kx kt]);
+    end
+```
 
 
 
-        %% xの更新
+#### xの更新
+```matlab
         %x[0]の準備<(17)_a>
         x = X(:,step-1);
         for i=1:num_x   %各ノードについて
@@ -446,12 +459,13 @@ end
         end
         %xの更新<(17)_c>
         X(:,step) = x;
+```
 
 
 
 
-
-         %% λの更新
+#### λの更新
+```matlab
         % λ検算用(スーパバイザ方式)
         for m = 1:num_lambda
             LAMBDA_s(m,step) = {max(0, LAMBDA_s{m,step-1}+B_p*G{m}( X(:,step)))};
@@ -511,18 +525,12 @@ end
         for n = 1:num_x
             LAMBDA(n,step) = {theta(n,:).'};
         end
+```
 
-
-        % 経過の表示
-        % s,k(xについて),k(thetaについて)
-        disp([step kx kt]);
-    end
-
+### 結果の保存
+```matlab
     save('result','stp_max','X','LAMBDA','LAMBDA_s','KT_END','THETA','wtc_m','wtc_step','c','factor','X_min','day');
     clear all;
-end
-clear f_run;
-
 ```
 
 
